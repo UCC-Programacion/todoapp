@@ -4,6 +4,7 @@
 #include "Task.h"
 #include "string_utils.h"
 #include "utils.h"
+#include <algorithm>
 #include <cstddef>
 #include <iterator>
 #include <map>
