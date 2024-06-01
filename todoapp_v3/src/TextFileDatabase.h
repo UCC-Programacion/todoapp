@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Database.h"
-#include <cassert>
 #include <cstddef>
 #include <fstream>
 #include <stdexcept>
@@ -13,7 +12,7 @@ private:
 
 public:
   TextFileDatabase(std::string path)
-    : m_path(path)
+    : m_path { path }
   {
   }
 

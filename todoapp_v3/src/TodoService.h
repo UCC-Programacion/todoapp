@@ -4,7 +4,6 @@
 #include "Task.h"
 #include "string_utils.h"
 #include "utils.h"
-#include <cassert>
 #include <cstddef>
 #include <iterator>
 #include <map>
@@ -17,19 +16,21 @@ private:
   Database& m_database;
   std::map<std::string, Task> m_tasks;
 
-  static const size_t ID_LENGTH { 4 };
+  static inline const size_t ID_LENGTH { 4 };
 
   static std::string random_id()
   {
     return utils::random_id(ID_LENGTH);
   }
 
-  inline static const std::string TASK_DELIMITER = "\n";
-  inline static const std::string TASK_FIELD_DELIMITER = ",";
+  static inline const std::string TASK_DELIMITER { "\n" };
+  static inline const std::string TASK_FIELD_DELIMITER { "," };
 
   static std::string task_to_string(const Task& task)
   {
-    return utils::join_strings({ task.get_id(), task.get_title(), task.get_completed() ? "1" : "0" }, TASK_FIELD_DELIMITER);
+    return utils::join_strings(
+      { task.get_id(), task.get_title(), task.get_completed() ? "1" : "0" },
+      TASK_FIELD_DELIMITER);
   }
 
   static Task task_from_string(const std::string& task_str)
@@ -92,13 +93,23 @@ public:
     m_tasks.insert({ t.get_id(), t });
   }
 
-  void create_task(const std::string& title)
+  Task create_task(const std::string& title)
   {
     auto id = random_id();
     while (m_tasks.contains(id))
       id = random_id();
 
-    m_tasks.insert({ id, Task { id, title } });
+    Task task { id, title };
+    m_tasks.insert({ id, task });
+
+    return task;
+  }
+
+  Task find(const std::string& id)
+  {
+    if (!m_tasks.contains(id))
+      throw TaskNotFoundError { id };
+    return m_tasks.at(id);
   }
 
   void delete_task(const std::string& id)
