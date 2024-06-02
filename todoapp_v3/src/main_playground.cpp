@@ -2,7 +2,7 @@
 #include "InMemoryDatabase.h"
 #include "TextFileDatabase.h"
 #include "TodoService.h"
-#include "string_utils.h"
+#include "utils_string.h"
 #include <cassert>
 #include <cstddef>
 #include <format>
@@ -10,31 +10,31 @@
 
 void test_string_utils()
 {
-  using utils::join_strings;
-  using utils::join_strings_v2;
-  using utils::split_string;
-  using utils::split_string_v2;
+  using utils::string::join;
+  using utils::string::join_v2;
+  using utils::string::split;
+  using utils::string::split_v2;
 
-  assert(join_strings(split_string("a,b,c", ","), ",") == "a,b,c");
-  assert(join_strings_v2(split_string_v2("a,b,c", ','), ',') == "a,b,c");
+  assert(join(split("a,b,c", ","), ",") == "a,b,c");
+  assert(join_v2(split_v2("a,b,c", ','), ',') == "a,b,c");
 
-  std::cout << join_strings({ "a", "b", "c" }, ",") << "\n";
-  std::cout << join_strings({ "a" }, ",") << "\n";
-  std::cout << join_strings({}, ",") << "\n";
-  std::cout << join_strings_v2({ "a", "b", "c" }, ',') << "\n";
-  std::cout << join_strings_v2({ "a" }, ',') << "\n";
-  std::cout << join_strings_v2({}, ',') << "\n";
+  std::cout << join({ "a", "b", "c" }, ",") << "\n";
+  std::cout << join({ "a" }, ",") << "\n";
+  std::cout << join({}, ",") << "\n";
+  std::cout << join_v2({ "a", "b", "c" }, ',') << "\n";
+  std::cout << join_v2({ "a" }, ',') << "\n";
+  std::cout << join_v2({}, ',') << "\n";
 }
 
 void test_file_db()
 {
   TextFileDatabase f { "test_file_db.txt" };
-  f.write("");
-  assert(f.read() == "");
-  std::cout << "read: " << f.read() << "\n";
-  f.write("bb");
-  assert(f.read() == "bb\n");
-  std::cout << "read: " << f.read() << "\n";
+  f.write({});
+  assert(f.read().size() == 0);
+  std::cout << "read: " << f.read().size() << "\n";
+  f.write({ "bb" });
+  assert(f.read().at(0) == "bb");
+  std::cout << "read: " << f.read().size() << "\n";
 }
 
 void test_format()
@@ -108,7 +108,7 @@ void test_todo_service_persistence()
 
   {
     TextFileDatabase db { db_path };
-    db.write("");
+    db.write({});
   }
 
   {

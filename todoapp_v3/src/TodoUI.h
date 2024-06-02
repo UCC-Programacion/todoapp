@@ -92,7 +92,7 @@ private:
       std::cout << "Ingrese el id: ";
       std::string id;
       std::cin >> id;
-      utils::ignoreLine();
+      utils::io::ignoreLine();
 
       std::cout << "Ingrese el titulo: ";
       std::string title;
@@ -113,19 +113,16 @@ private:
 
   void show_tasks_table(const std::vector<Task>& tasks)
   {
-    std::cout << std::format("{:8}", "Id")
-              << " "
-              << std::format("{:25}", "Titulo")
-              << " "
-              << std::format("{:15}", "Esta completa?")
-              << "\n"
-              << "--------------------------------------------"
-              << "\n";
+    std::cout << std::format("{:8}", "Id") << " "
+              << std::format("{:25}", "Titulo") << " "
+              << std::format("{:15}", "Esta completa?") << "\n"
+              << "--------------------------------------------" << "\n";
     for (auto& task : tasks) {
-      std::cout << std::format("{:8}", task.get_id())
-                << " "
+      std::cout << std::format("{:8}", task.get_id()) << " "
                 << std::format("{:25}",
-                     task.get_title().size() > 24 ? (task.get_title().substr(0, 21) + "...") : task.get_title())
+                     task.get_title().size() > 24
+                       ? (task.get_title().substr(0, 21) + "...")
+                       : task.get_title())
                 << " "
                 << std::format("{:15}", task.get_completed() ? "si" : "no")
                 << "\n";
@@ -239,7 +236,7 @@ private:
                 << "9. Borrar tareas completadas\n"
                 << "0. Salir\n\n";
 
-      int option = utils::get_int(
+      int option = utils::io::get_int(
         "Seleccione una opcion: ",
         "La opcion seleccionada no es valida. Intente de nuevo.\n");
 

@@ -2,8 +2,8 @@
 
 #include "Database.h"
 #include "Task.h"
-#include "string_utils.h"
 #include "utils.h"
+#include "utils_string.h"
 #include <algorithm>
 #include <cstddef>
 #include <iterator>
@@ -24,19 +24,18 @@ private:
     return utils::random_id(ID_LENGTH);
   }
 
-  static inline const std::string TASK_DELIMITER { "\n" };
   static inline const std::string TASK_FIELD_DELIMITER { "," };
 
   static std::string task_to_string(const Task& task)
   {
-    return utils::join_strings(
+    return utils::string::join(
       { task.get_id(), task.get_title(), task.get_completed() ? "1" : "0" },
       TASK_FIELD_DELIMITER);
   }
 
   static Task task_from_string(const std::string& task_str)
   {
-    std::vector<std::string> task_items = utils::split_string(task_str, TASK_FIELD_DELIMITER);
+    std::vector<std::string> task_items = utils::string::split(task_str, TASK_FIELD_DELIMITER);
     std::string id = task_items[0];
     std::string title = task_items[1];
     bool completed = task_items[2] == "0" ? false : true;
@@ -45,8 +44,7 @@ private:
 
   void load_tasks()
   {
-    std::string tasks_str = m_database.read();
-    std::vector<std::string> tasks_lines = utils::split_string(tasks_str, TASK_DELIMITER);
+    std::vector<std::string> tasks_lines = m_database.read();
     for (size_t i = 0; i < tasks_lines.size(); i++) {
       if (tasks_lines[i].empty())
         continue;
@@ -62,8 +60,7 @@ private:
       const Task& t = pair.second;
       task_lines.push_back(task_to_string(t));
     }
-    std::string tasks_str = utils::join_strings(task_lines, TASK_DELIMITER);
-    m_database.write(tasks_str);
+    m_database.write(task_lines);
   }
 
 public:
